@@ -1,0 +1,4 @@
+opensrf_src_dir: "/usr/local/src/opensrf"
+prefix: "/opensrf"
+sysconfdir: "{{ prefix }}/conf"
+opensrf_websockets_port: "7682"

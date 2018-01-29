@@ -1,0 +1,36 @@
+---
+- name: install packages
+  action: apt pkg={{item}} state=installed
+  with_items:
+  - gcc
+  - libbusiness-isbn-perl
+  - libjson-xs-perl
+  - liblibrary-callnumber-lc-perl
+  - libmarc-record-perl
+  - libmarc-xml-perl
+  - librose-uri-perl
+  - libuuid-tiny-perl
+  - libxml-libxml-perl
+  - libxml-libxslt-perl
+  - postgresql-9.6
+  - postgresql-contrib-9.6
+  - postgresql-plperl-9.6
+  - postgresql-server-dev-9.6
+  - libpq-dev  # for ansible
+  - python-psycopg2 # for ansible
+  - acl # for ansible
+
+- name: "create EG postgres user"
+  become: yes
+  become_user: postgres
+  vars:
+    ansible_ssh_pipelining: true
+  postgresql_user:
+    name: "{{evergreen_db_user}}"
+    password: "{{evergreen_db_password}}"
+    role_attr_flags: "CREATEDB,SUPERUSER"
+
+- name: Start PostgreSQL
+  service:
+    name: postgresql
+    state: started

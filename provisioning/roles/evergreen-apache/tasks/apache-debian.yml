@@ -1,0 +1,35 @@
+- name: eg_startup
+  template:
+    src: "eg_startup.j2"
+    dest: "/etc/apache2/eg_startup"
+
+- name: eg.conf
+  template:
+    src: "apache_24_eg.j2"
+    dest: "/etc/apache2/sites-available/eg.conf"
+
+- name: eg_vhost.conf
+  template:
+    src: "apache_24_eg_vhost.j2"
+    dest: "/etc/apache2/eg_vhost.conf"
+
+- name: mpm_prefork.conf
+  template:
+    src: "mpm_prefork.conf.j2"
+    dest: "/etc/apache2/mods-available/mpm_prefork.conf"
+- apache2_module:
+    state: present
+    name: mpm_prefork
+- apache2_module:
+    state: present
+    name: perl
+
+- name: envvars
+  template:
+    src: "envvars.j2"
+    dest: "/etc/apache2/envvars"
+
+- name: ports
+  template:
+    src: "ports.j2"
+    dest: "/etc/apache2/ports.conf"

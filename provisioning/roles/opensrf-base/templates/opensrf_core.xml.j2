@@ -1,0 +1,160 @@
+<?xml version="1.0"?>
+<!-- 
+vim:et:ts=2:sw=2:
+-->
+<config>
+
+  <!-- bootstrap config for OpenSRF apps -->
+  <opensrf>
+
+    <routers>
+
+      <!-- define the list of routers our services will register with -->
+
+      <router>
+
+        <!-- This is the public router.  On this router, we only register applications
+             which should be accessible to everyone on the opensrf network -->
+        <name>router</name>
+        <domain>{{ domains.public.host }}</domain>
+        <services>
+        {% for service in domains.public.services %}
+            <service>{{ service }}</service> 
+        {% endfor %}
+        </services>
+      </router>
+
+      <router>
+        <!-- This is the private router.  All applications must register with 
+            this router, so no explicit <services> section is required -->
+        <name>router</name>
+        <domain>{{ domains.private.host }}</domain>
+      </router>
+    </routers>
+
+
+    <!-- Jabber login settings
+        Our domain should match that of the private router -->
+    <domain>{{ domains.private.host }}</domain>
+    <username>{{ domains.private.user }}</username>
+    <passwd>{{ domains.private.password }}</passwd>
+    <port>5222</port>
+    <!-- name of the router used on our private domain.  
+        this should match one of the <name> of the private router above -->
+    <router_name>router</router_name>
+
+    <!-- Log a warning when an outbound message reaches this size in bytes -->
+    <msg_size_warn>1800000</msg_size_warn>
+
+    <!-- log file settings ======================================  -->
+    <!-- log to a local file -->
+    <logfile>{{ localstatedir }}/log/osrfsys.log</logfile>
+
+    <!-- Log to syslog. You can use this same layout for 
+        defining the logging of all services in this file -->
+    <!--
+    <logfile>syslog</logfile>
+    <syslog>local2</syslog>
+    <actlog>local1</actlog>
+    -->
+    <!-- Optional log tag.  You can use this to help distinguish
+         syslog entries when running multiple OpenSRF stacks on the
+         same server. -->
+    <!--
+    <logtag>instance1</logtag>
+    -->
+
+    <!-- 0 None, 1 Error, 2 Warning, 3 Info, 4 debug, 5 Internal (Nasty) -->
+    <loglevel>3</loglevel>
+
+    <!-- Maximum log message length; if using syslog, you might need to adjust
+         your syslog service's configuration to match longer message lengths -->
+    <loglength>1536</loglength>
+
+    <!-- config file for the services -->
+    <settings_config>{{ sysconfdir }}/opensrf.xml</settings_config>
+
+  </opensrf>
+
+  <!-- The section between <gateway>...</gateway> is a standard OpenSRF C stack config file -->
+  <gateway>
+
+    <!--
+    we consider ourselves to be the "originating" client for requests,
+    which means we define the log XID string for log traces
+    -->
+    <client>true</client>
+
+    <!--  the routers's name on the network -->
+    <router_name>router</router_name>
+
+    <!-- jabber login info -->
+    <!-- The gateway connects to the public domain -->
+    <domain>{{ domains[ gateway.domain ].host }}</domain>
+    <username>{{ domains[ gateway.domain ].user }}</username>
+    <passwd>{{ domains[ gateway.domain ].password }}</passwd>
+    <port>5222</port>
+    <logfile>{{ localstatedir }}/log/gateway.log</logfile>
+    <loglevel>3</loglevel>
+
+    <!-- cross origin HTTP settings http://en.wikipedia.org/wiki/Cross-origin_resource_sharing -->
+    <cross_origin>
+        <!-- specify individual hosts -->
+        <!-- <origin>example.com</origin> -->
+        <!-- ...or use the * wildcard to match all -->
+        <!-- <origin>*</origin> -->
+    </cross_origin>
+
+  </gateway>
+
+  <!-- ======================================================================================== -->
+
+    <routers>
+    {% for router in routers %}
+        <router> <!-- {{ router.name }} -->
+            <trusted_domains>
+                {% for tds in router.trusted_domain_servers %}
+                <server>{{ tds }}</server>
+                {% endfor %}
+                {% for tdc in router.trusted_domain_clients %}
+                <client>{{ tdc }}</client>
+                {% endfor %}
+            </trusted_domains>
+            <transport>
+                <server>{{ router.transport_host }}</server>
+                <port>5222</port>
+                <unixpath>{{ localstatedir }}/sock/unix_sock</unixpath>
+                <username>{{ router.user }}</username>
+                <password>{{ router.password }}</password>
+                <resource>router</resource>
+                <connect_timeout>10</connect_timeout>
+                <max_reconnect_attempts>5</max_reconnect_attempts>
+            </transport>
+            <logfile>{{ localstatedir }}/log/router.log</logfile>
+            <!--
+            <logfile>syslog</logfile>
+            <syslog>local2</syslog>
+            -->
+            <!--
+            <logtag>instance1</logtag>
+            -->
+            <loglevel>2</loglevel>
+        </router>
+    {% endfor %}
+    </routers>
+
+  <!-- ======================================================================================== -->
+
+  <shared>
+    <!-- Any methods which match any of these match_string node values will
+         have their params redacted from lower-level input logging.
+         Adjust these examples as needed. -->
+    <log_protect>
+    <!--
+      <match_string>open-ils.auth</match_string>
+      <match_string>open-ils.some_service.some_method</match_string>
+    -->
+    </log_protect>
+  </shared>
+
+</config>

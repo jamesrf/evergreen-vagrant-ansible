@@ -1,0 +1,10 @@
+---
+- name: ldconfig
+  command: ldconfig
+
+- name: restart evergreen
+  service:  name=evergreen state=restarted
+
+- name: "reload systemd"
+  systemd:
+    daemon_reload: yes

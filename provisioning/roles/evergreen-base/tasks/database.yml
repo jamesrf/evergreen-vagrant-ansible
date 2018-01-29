@@ -1,0 +1,17 @@
+
+
+- name: check if Evergreen DB exists
+  shell: "PGPASSWORD={{evergreen_db_password}} /usr/bin/psql -h {{evergreen_db_host}} -p {{evergreen_db_port}} -U {{evergreen_db_user}} -l {{evergreen_db}}"
+  register: database_exists
+  ignore_errors: yes
+
+- name: create Evergreen DB
+  command: >
+    perl {{ evergreen_src_dir }}/Evergreen-ILS-{{ evergreen_version }}/Open-ILS/src/support-scripts/eg_db_config --update-config \
+       --service all --create-database --create-schema --create-offline \
+       {{ "--load-all-sample" if evergreen_sample_data }} \
+       --user {{evergreen_db_user}} --password {{evergreen_db_password}} --hostname {{evergreen_db_host}} --port {{evergreen_db_port}} \
+       --database {{evergreen_db}} --admin-user {{evergreen_admin_user}} --admin-pass {{evergreen_admin_password}}
+  when: database_exists.rc != 0
+
+

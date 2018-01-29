@@ -1,0 +1,2 @@
+[evergreen]
+<ip-address-of-server> ansible_connection=ssh  ansible_user=<your user> ansible_become=true ansible_become_user=root

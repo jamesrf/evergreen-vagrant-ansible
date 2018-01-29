@@ -1,0 +1,51 @@
+---
+- name: download apache-websocket
+  git:
+    repo: https://github.com/disconnect/apache-websocket
+    dest: "{{opensrf_src_dir}}/apache-websocket"
+
+- name: install apache-websocket
+  command: "apxs2 -i -a -c mod_websocket.c"
+  args: 
+    chdir: "{{opensrf_src_dir}}/apache-websocket"
+
+- name: apache ws instance
+  command: "sh /usr/share/doc/apache2/examples/setup-instance websockets"
+  args:
+    creates: "/etc/apache2-websockets"
+
+- name: apache2 websocket module
+  apache2_module:
+    state: absent
+    name: websocket
+
+- name: apache2 websocket conf
+  template:
+    src: apache2.conf.j2
+    dest: "/etc/apache2-websockets/apache2.conf"
+  notify: "restart apache2-websockets"
+
+- name: apache2 websocket envvars
+  template:
+    src: envvars.j2
+    dest: "/etc/apache2-websockets/envvars"
+  notify: "restart apache2-websockets"
+
+- name: start apache2 websocket
+  service:
+    name: apache2@websockets.service
+    state: started
+
+- name: javascript websocket port kludge
+  lineinfile:
+    path: "{{prefix}}/lib/javascript/opensrf_ws.js"
+    regexp: '^var WEBSOCKET_PORT_SSL = 7682;'
+    line: 'var WEBSOCKET_PORT_SSL = 443;'
+
+- name: javascript websocket port kludge 2
+  lineinfile:
+    path: "{{prefix}}/lib/javascript/opensrf_ws_shared.js"
+    regexp: '^var WEBSOCKET_PORT_SSL = 7682;'
+    line: 'var WEBSOCKET_PORT_SSL = 443;'
+
+    

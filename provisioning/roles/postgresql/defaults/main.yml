@@ -1,0 +1,5 @@
+evergreen_db: "evergreen"
+evergreen_db_user: "evergreen"
+evergreen_db_password: "eg1234"
+evergreen_db_host: "localhost"
+evergreen_db_port: 5432

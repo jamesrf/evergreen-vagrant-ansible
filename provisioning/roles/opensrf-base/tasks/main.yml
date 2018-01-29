@@ -1,0 +1,101 @@
+---
+- name: update and upgrade apt packages
+  apt: >
+    upgrade=yes
+    update_cache=yes
+    cache_valid_time=3600
+
+- name: install packages
+  action: apt pkg={{item}} state=installed
+  with_items:
+  - build-essential
+  - git
+  - sudo
+  - wget
+  - curl
+
+# Create a directory for our OpenSRF src code
+- name: Creates directory
+  file:
+    path: "{{ opensrf_src_dir }}"
+    state: directory
+
+# Download OpenSRF tarball from $opensrf_url
+# Unzip into $opensrf_src_dir
+- name: download and unzip opensrf
+  unarchive:
+      src: "{{ opensrf_url }}"
+      dest: "{{ opensrf_src_dir }}"
+      copy: no
+
+# Install Debian/Ubuntu Debs from included files
+
+- include_tasks: packages.yml
+
+- name: build opensrf
+  shell: "./configure --with-websockets-port={{ opensrf_websockets_port }} --prefix={{ prefix }} --sysconfdir={{ sysconfdir }} && make && make install"
+  args:
+    chdir: "{{opensrf_src_dir}}/opensrf-{{ opensrf_version }}"
+    creates: "{{ opensrf_src_dir }}/opensrf-{{ opensrf_version }}/src/libopensrf/.libs/libopensrf.so"
+
+- group:
+    name: opensrf
+
+- user:
+    name: opensrf
+    groups: opensrf
+    shell: /bin/bash
+
+- lineinfile:
+    dest: /home/opensrf/.bashrc
+    state: present
+    regexp: 'PATH=$PATH:{{ prefix }}/bin'
+    line: 'PATH=$PATH:{{ prefix }}/bin'
+
+- name: hosts file
+  template:
+    src: "hosts.j2"
+    dest: "/etc/hosts"    
+
+- name: ld path file
+  template:
+    src: "opensrf_ld.j2"
+    dest: "/etc/ld.so.conf.d/opensrf.conf"
+  notify: ldconfig
+  
+- name: flush handlers to make sure ldconfig is run right away
+  meta: flush_handlers
+
+- name: opensrf_core.xml
+  template:
+    src: "opensrf_core.xml.j2"
+    dest: "{{ prefix }}/conf/opensrf_core.xml"
+
+- name: opensrf.xml
+  template:
+    src: "opensrf.xml.j2"
+    dest: "{{ prefix }}/conf/opensrf.xml"
+
+- name: srfsh.xml
+  template:
+    src: "srfsh.xml.j2"
+    dest: "/home/opensrf/.srfsh.xml"
+
+- name: openils dir ownership
+  file:
+    path: "{{ prefix }}"
+    state: directory
+    recurse: yes
+    owner: opensrf
+    group: opensrf
+    mode: 0755
+
+- name: apache2 ssl dir
+  file:
+    path: "{{ apache_ssl_path }}"
+    state: directory
+
+- name: create self-signed SSL cert
+  command: openssl req -new -nodes -x509 -subj "/C=CA/ST=BC/L=Vancouver/O=IT/CN=${ansible_fqdn}" -days 3650 -keyout {{ apache_ssl_path }}/server.key -out {{ apache_ssl_path }}/server.crt -extensions v3_ca creates={{ apache_ssl_path }}/server.crt
+  args:
+    creates: "{{apache_ssl_path}}/server.crt"

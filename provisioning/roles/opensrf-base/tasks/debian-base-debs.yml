@@ -1,0 +1,56 @@
+---
+- name: install debian deps
+  action: apt pkg={{item}} state=installed
+  with_items:
+  - autoconf
+  - automake
+  - build-essential
+  - check
+#  - ejabberd
+  - less
+  - libapache2-mod-perl2
+  - libcache-memcached-perl
+  - libclass-dbi-abstractsearch-perl
+  - libclass-dbi-sqlite-perl
+  - libdatetime-format-builder-perl
+  - libdatetime-format-mail-perl
+  - libdatetime-perl
+  - libdatetime-timezone-perl
+  - liberror-perl
+  - libexpat1-dev
+  - libfile-find-rule-perl
+  - libgcrypt11-dev 
+  - libgdbm-dev 
+  - liblog-log4perl-perl
+  - libmemcached-dev 
+  - libmemcached-tools 
+  - libmodule-build-perl
+  - libnet-dns-perl
+  - libperl-dev
+  - libreadline-dev
+  - libtemplate-perl
+  - libtest-pod-perl
+  - libtie-ixhash-perl
+  - libtool
+  - libuniversal-require-perl
+  - libunix-syslog-perl
+  - libwww-perl
+  - libxml2-dev
+  - libxml-libxml-perl
+  - libxml-libxslt-perl
+  - libxml-simple-perl
+  - libxslt1-dev
+#  - memcached
+  - pkg-config
+  - psmisc
+  - python-coverage
+  - python-dev
+  - python-libxml2
+  - python-memcache
+  - python-nose
+  - python-pyxmpp
+  - python-setuptools
+  - python-simplejson
+  - tar
+  - zlib1g-dev
+

@@ -1,0 +1,2 @@
+- name: restart apache2-websockets
+  service:  name=apache2@websockets.service state=restarted

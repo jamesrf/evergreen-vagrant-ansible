@@ -1,0 +1,11 @@
+---
+- name: install extra-debs-jessie
+  action: apt pkg={{item}} state=installed
+  with_items:
+  - apache2
+  - apache2-dev
+  - libncurses5-dev
+
+  # jessie:
+  # - apache2-mpm-prefork
+  # - apache2-prefo\rk-dev

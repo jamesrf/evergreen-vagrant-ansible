@@ -1,0 +1,15 @@
+---
+- hosts: all
+  user: vagrant
+  become: yes
+  gather_facts: yes
+  roles:
+  - base
+  - ejabberd
+  - memcached
+  - opensrf-base
+  - opensrf-ws
+  - postgresql
+  - evergreen-base
+  - evergreen-apache
+  - haproxy

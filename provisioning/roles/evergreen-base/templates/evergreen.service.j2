@@ -1,0 +1,14 @@
+[Unit]
+Description=Evergreen
+After=multi-user.target
+
+[Service]
+Type=forking
+Environment=PATH=/usr/local/bin:/usr/bin:/bin:/openils/bin
+User=opensrf
+ExecStart={{prefix}}/bin/osrf_control --localhost --start-all
+ExecReload={{prefix}}/bin/osrf_control --localhost --restart-all
+ExecStop={{prefix}}/bin/osrf_control --localhost --stop-all
+
+[Install]
+WantedBy=multi-user.target

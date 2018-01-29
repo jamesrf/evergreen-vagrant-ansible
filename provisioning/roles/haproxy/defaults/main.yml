@@ -1,0 +1,3 @@
+apache_http_port: 7080
+apache_https_port: 7443
+opensrf_websockets_port: "443"

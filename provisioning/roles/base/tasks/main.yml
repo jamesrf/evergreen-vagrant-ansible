@@ -1,0 +1,6 @@
+- name: hosts file
+  template:
+    src: "hosts.j2"
+    dest: "/etc/hosts"    
+
+# add other base tasks you want ie: monitoring, log setup

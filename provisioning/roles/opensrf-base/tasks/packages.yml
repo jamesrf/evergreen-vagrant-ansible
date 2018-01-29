@@ -1,0 +1,16 @@
+# this task file handles package installation
+# debian 8 - jessie
+
+# these are the base debs for all Debian/Ubuntu
+- include_tasks: debian-base-debs.yml
+  when: ansible_distribution == "Debian" 
+        or ansible_distribution == "Ubuntu"
+
+# these are debian extra-debs from the makefile
+- include_tasks: debian-extra-debs.yml
+  when: ansible_distribution == "Debian" 
+
+# these are debs required for apache with debian
+# we probably don't need this for application servers
+- include_tasks: debian-apache-config.yml
+  when: ansible_distribution == "Debian" 

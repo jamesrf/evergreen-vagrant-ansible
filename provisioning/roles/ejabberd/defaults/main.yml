@@ -1,0 +1,35 @@
+---
+normal_shaper: 500000
+fast_shaper: 50000
+max_user_sessions: 10000
+
+domains:
+  private:
+    host: private.localhost
+    user: opensrf
+    password: password
+  public:
+    host: public.localhost
+    user: opensrf
+    password: password
+    services:
+    - opensrf.math
+
+routers:
+- name: public_router
+  user: router
+  password: password
+  transport_host: "{{ domains.public.host }}"
+  trusted_domain_servers:
+  - "{{ domains.private.host }}"
+  trusted_domain_clients:
+  - "{{ domains.public.host }}"
+  - "{{ domains.private.host }}"
+- name: private_router
+  user: router
+  password: password
+  transport_host: "{{ domains.private.host }}"
+  trusted_domain_servers:
+  - "{{ domains.private.host }}"
+  trusted_domain_clients:
+  - "{{ domains.private.host }}"

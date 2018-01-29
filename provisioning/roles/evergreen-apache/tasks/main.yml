@@ -1,0 +1,12 @@
+- include_tasks: apache-debian.yml
+  when: ansible_distribution == "Debian"
+
+- name: a2ensite eg
+  command: a2ensite eg
+  notify:
+  - restart apache2
+
+- name: a2dissite 000-default
+  command: a2dissite 000-default
+  notify:
+  - restart apache2

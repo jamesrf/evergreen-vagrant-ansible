@@ -1,0 +1,20 @@
+---
+- apache2_module:
+    state: absent
+    name: mpm_event
+    ignore_configcheck: true
+- apache2_module:
+    state: present
+    name: mpm_prefork
+    ignore_configcheck: true
+- apache2_module:
+    state: present
+    name: ssl
+- apache2_module:
+    state: present
+    name: perl
+- lineinfile:
+    path: /etc/apache2/apache2.conf
+    state: present
+    regexp: 'LoadModule mod_placeholder'
+    line: '#LoadModule mod_placeholder /usr/lib/apache2/modules/mod_placeholder.so'

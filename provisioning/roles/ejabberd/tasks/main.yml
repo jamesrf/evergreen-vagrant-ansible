@@ -1,0 +1,28 @@
+---
+- name: install packages
+  action: apt pkg={{item}} state=installed
+  with_items:
+  - ejabberd
+  - ejabberd-contrib
+
+- name: ejabberd.yml
+  template:
+    src: "ejabberd.yml.j2"
+    dest: "/etc/ejabberd/ejabberd.yml"
+  notify: 
+  - restart ejabberd
+- meta: flush_handlers
+
+- name: create opensrf domain users
+  ejabberd_user:
+    username: "{{ domains[item].user }}"
+    host: "{{ domains[item].host }}"
+    password: "{{ domains[item].password }}"
+  with_items: "{{ domains }}"
+
+- name: create router users (router)
+  ejabberd_user:
+    username: "{{ item.user }}"
+    host: "{{ item.transport_host }}"
+    password: "{{ item.password }}"
+  with_items: "{{ routers }}"
