@@ -4,6 +4,10 @@
 
 Automatically builds and installs Evergreen on a Vagrant VM with one command.
 
+Problems?  Open an Issue above by clicking on "Issues".
+
+PRs welcome!
+
 ## Requirements
 
 - Vagrant: https://www.vagrantup.com/downloads.html
@@ -14,12 +18,16 @@ Note: This probably won't work on Windows
 
 ## How to use
 
-1. Clone this repo and run `vagrant up`
-2. Visit https://10.10.11.11/eg/staff
-3. Login with admin/pass123
-4. You've got Evergreen!  Check it out! (pun intended)
+1. Open your good old fashioned terminal
+2. Clone this repo: `git clone https://github.com/jamesrf/evergreen-vagrant-ansible`
+3. Enter the repo directory: `cd evergreen-vagrant-ansible`
+4. Run `vagrant up` 
+  - it may take some time the first time you run it to download the base box
+  - it takes about 20-30m on my machine to run the provisioning, times will vary depending on your machine's speed and internet connection
+  
+5. Your evergreen is now at https://10.10.11.11
+6. Default admin login is admin/pass123
 
-Issues? PRs?  Open an issue on this GitHub!
 
 ## Gotchas
 
