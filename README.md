@@ -6,8 +6,8 @@ Automatically builds and installs Evergreen on a Vagrant VM with one command.
 
 ## Requirements
 
-Vagrant: https://www.vagrantup.com/downloads.html
-Ansible: http://docs.ansible.com/ansible/latest/intro_installation.html
+- Vagrant: https://www.vagrantup.com/downloads.html
+- Ansible: http://docs.ansible.com/ansible/latest/intro_installation.html
 
 ## How to use
 
