@@ -18,6 +18,7 @@ Vagrant.configure("2") do |config|
     ansible.playbook = "provisioning/playbook.yml"
     ansible.compatibility_mode = "2.0"
     
+    ansible.raw_arguments = ['-e pipelining=True']
     # enable this for better ansible debugging output
     # ansible.verbose = "vvvv"
   end
