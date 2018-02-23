@@ -1,0 +1,65 @@
+
+domains:
+  private:
+    host: private.localhost
+    user: opensrf
+    password: password
+  public:
+    host: public.localhost
+    user: opensrf
+    password: password
+    services:
+    - "opensrf.math"
+    - "open-ils.actor"
+    - "open-ils.acq"
+    - "open-ils.auth"
+    - "open-ils.auth_proxy"
+    - "open-ils.booking"
+    - "open-ils.cat"
+    - "open-ils.circ"
+    - "open-ils.collections"
+    - "open-ils.fielder"
+    - "open-ils.pcrud"
+    - "open-ils.permacrud"
+    - "open-ils.reporter"
+    - "open-ils.resolver"
+    - "open-ils.search"
+    - "open-ils.supercat"
+    - "open-ils.url_verify"
+    - "open-ils.vandelay"
+    - "open-ils.serial"
+    - "open-ils.ebook_api"
+
+gateway:
+  domain: "public"
+  services:
+  - "opensrf.math"
+  - "opensrf.dbmath"
+  - "open-ils.cat"
+  - "open-ils.search"
+  - "open-ils.circ"
+  - "open-ils.actor"
+  - "open-ils.auth"
+  - "open-ils.auth_proxy"
+  - "open-ils.collections"
+  - "open-ils.reporter"
+
+routers:
+- name: public_router
+  user: router
+  password: password
+  transport_host: "{{ domains.public.host }}"
+  trusted_domain_servers:
+  - "{{ domains.private.host }}"
+  trusted_domain_clients:
+  - "{{ domains.public.host }}"
+  - "{{ domains.private.host }}"
+
+- name: private_router
+  user: router
+  password: password
+  transport_host: "{{ domains.private.host }}"
+  trusted_domain_servers:
+  - "{{ domains.private.host }}"
+  trusted_domain_clients:
+  - "{{ domains.private.host }}"
