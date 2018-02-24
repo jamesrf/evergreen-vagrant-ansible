@@ -20,23 +20,21 @@
     path: "{{ opensrf_src_dir }}"
     state: directory
 
-# Download OpenSRF tarball from $opensrf_url
-# Unzip into $opensrf_src_dir
-- name: download and unzip opensrf
-  unarchive:
-      src: "{{ opensrf_url }}"
-      dest: "{{ opensrf_src_dir }}"
-      copy: no
+- debug:
+    var: opensrf_branch
 
-# Install Debian/Ubuntu Debs from included files
+- debug:
+    var: opensrf_version
 
-- include_tasks: packages.yml
+- include_tasks: build-from-tarball.yml
+  when: opensrf_version is defined and opensrf_branch is not defined
 
-- name: build opensrf
-  shell: "./configure --with-websockets-port={{ opensrf_websockets_port }} --prefix={{ prefix }} --sysconfdir={{ sysconfdir }} && make && make install"
-  args:
-    chdir: "{{opensrf_src_dir}}/opensrf-{{ opensrf_version }}"
-    creates: "{{ opensrf_src_dir }}/opensrf-{{ opensrf_version }}/src/libopensrf/.libs/libopensrf.so"
+- include_tasks: build-from-git.yml
+  when: opensrf_branch is defined and opensrf_version is not defined
+
+- fail:
+    msg: "missing opensrf_branch or opensrf_version variable"
+  when: opensrf_branch is not defined and opensrf_version is not defined
 
 - group:
     name: opensrf

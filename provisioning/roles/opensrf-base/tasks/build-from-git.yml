@@ -1,0 +1,36 @@
+- name: install build tools
+  action: apt pkg={{item}} state=installed
+  with_items:
+  - autoconf
+  - automake
+  - libtool
+
+- name: clone Evergreen
+  git:
+    repo: "{{ opensrf_repo }}"
+    version: "{{ opensrf_branch }}"
+    dest: "{{ opensrf_src_dir }}"
+
+# Install Debian/Ubuntu Debs from included files
+- include_tasks: packages.yml
+
+## TODO: move these dependencies into ansible?
+- name: install opensrf deps
+  shell: "make -f src/extras/Makefile.install debian-stretch"
+  args:
+    chdir: "{{ opensrf_src_dir }}"
+
+
+# Download OpenSRF tarball from $opensrf_url
+# Unzip into $opensrf_src_dir
+- name: autoreconf
+  shell: "autoreconf -i"
+  args:
+    chdir: "{{opensrf_src_dir}}"
+  
+
+- name: build opensrf
+  shell: "./configure --with-websockets-port={{ opensrf_websockets_port }} --prefix={{ prefix }} --sysconfdir={{ sysconfdir }} && make && make install"
+  args:
+    chdir: "{{opensrf_src_dir}}"
+    creates: "{{ opensrf_src_dir }}/src/libopensrf/.libs/libopensrf.so"

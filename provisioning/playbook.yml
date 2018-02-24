@@ -8,8 +8,8 @@
   - ejabberd
   - memcached
   - opensrf-base
-  - opensrf-ws
-  - postgresql
-  - evergreen-base
-  - evergreen-apache
-  - haproxy
+  # - opensrf-ws
+  # - postgresql
+  # - evergreen-base
+  # - evergreen-apache
+  # - haproxy

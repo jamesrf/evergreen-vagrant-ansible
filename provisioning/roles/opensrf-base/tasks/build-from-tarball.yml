@@ -1,0 +1,16 @@
+# Download OpenSRF tarball from $opensrf_url
+# Unzip into $opensrf_src_dir
+- name: download and unzip opensrf
+  unarchive:
+      src: "{{ opensrf_url }}"
+      dest: "{{ opensrf_src_dir }}"
+      copy: no
+  
+# Install Debian/Ubuntu Debs from included files
+- include_tasks: packages.yml
+
+- name: build opensrf
+  shell: "./configure --with-websockets-port={{ opensrf_websockets_port }} --prefix={{ prefix }} --sysconfdir={{ sysconfdir }} && make && make install"
+  args:
+    chdir: "{{opensrf_src_dir}}/opensrf-{{ opensrf_version }}"
+    creates: "{{ opensrf_src_dir }}/opensrf-{{ opensrf_version }}/src/libopensrf/.libs/libopensrf.so"

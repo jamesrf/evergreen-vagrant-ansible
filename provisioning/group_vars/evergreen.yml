@@ -1,3 +1,7 @@
+prefix: "/openils"
+sysconfdir: "{{ prefix }}/conf"
+localstatedir: "{{ prefix }}/var"
+bindir: "{{ prefix }}/bin"
 
 domains:
   private:

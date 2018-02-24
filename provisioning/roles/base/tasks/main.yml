@@ -3,4 +3,10 @@
     src: "hosts.j2"
     dest: "/etc/hosts"    
 
+- name: install dev tools
+  action: apt pkg={{item}} state=installed
+  with_items:
+  - vim
+  # - apache2-dev
+  # - libncurses5-dev
 # add other base tasks you want ie: monitoring, log setup

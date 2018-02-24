@@ -1,5 +1,7 @@
 ---
-opensrf_version: "3.0.0"
+#opensrf_version: "3.0.0"
+opensrf_branch: master
+opensrf_repo: "git://git.evergreen-ils.org/OpenSRF"
 opensrf_tarball: "opensrf-{{ opensrf_version }}.tar.gz"
 opensrf_url: "https://evergreen-ils.org/downloads/{{ opensrf_tarball }}"
 opensrf_src_dir: "/usr/local/src/opensrf"
