@@ -1,7 +1,12 @@
 ---
-evergreen_version: "3.0.3"
-evergreen_tarball: "Evergreen-ILS-{{ evergreen_version }}.tar.gz"
-evergreen_url: "https://evergreen-ils.org/downloads/{{ evergreen_tarball }}"
+evergreen_branch: "master"
+evergreen_repo: "git://git.evergreen-ils.org/Evergreen"
+
+# to build from tarball
+#evergreen_version: "3.0.3"
+#evergreen_tarball: "Evergreen-ILS-{{ evergreen_version }}.tar.gz"
+#evergreen_url: "https://evergreen-ils.org/downloads/{{ evergreen_tarball }}"
+
 evergreen_src_dir: "/usr/local/src/evergreen"
 staff_client_id: "HEAD"
 

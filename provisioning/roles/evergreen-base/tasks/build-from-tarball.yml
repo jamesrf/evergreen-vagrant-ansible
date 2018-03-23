@@ -1,0 +1,19 @@
+
+- name: download and unzip evergreen
+  unarchive:
+      creates: "{{ evergreen_src_dir }}/Evergreen-ILS-{{ evergreen_version }}"
+      src: "{{ evergreen_url }}"
+      dest: "{{ evergreen_src_dir }}"
+      copy: no
+      extra_opts: [--strip-components=1]
+
+- name: install evergreen deps
+  shell: "make -f Open-ILS/src/extras/Makefile.install debian-stretch"
+  args:
+    chdir: "{{ evergreen_src_dir }}""
+
+- name: build evergreen
+  shell: "PATH=$PATH:{{ bindir }} ./configure --prefix={{ prefix }} --sysconfdir={{ sysconfdir }} && make && make STAFF_CLIENT_STAMP_ID={{staff_client_id}} install"
+  args:
+    chdir: "{{evergreen_src_dir}}"
+    creates: "{{ evergreen_src_dir }}/Open-ILS/src/c-apps/.libs/liboils_cstore.so"

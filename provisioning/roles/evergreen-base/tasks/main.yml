@@ -10,25 +10,15 @@
     path: "{{ evergreen_src_dir }}"
     state: directory
 
-# TODO: git branches?
-- name: download and unzip evergreen
-  unarchive:
-      creates: "{{ evergreen_src_dir }}/Evergreen-ILS-{{ evergreen_version }}"
-      src: "{{ evergreen_url }}"
-      dest: "{{ evergreen_src_dir }}"
-      copy: no
+- include_tasks: build-from-tarball.yml
+  when: evergreen_version is defined and evergreen_branch is not defined
 
-## TODO: move these dependencies into ansible?
-- name: install evergreen deps
-  shell: "make -f Open-ILS/src/extras/Makefile.install debian-stretch"
-  args:
-    chdir: "{{ evergreen_src_dir }}/Evergreen-ILS-{{ evergreen_version }}"
+- include_tasks: build-from-git.yml
+  when: evergreen_branch is defined and evergreen_version is not defined
 
-- name: build evergreen
-  shell: "PATH=$PATH:{{ bindir }} ./configure --prefix={{ prefix }} --sysconfdir={{ sysconfdir }} && make && make STAFF_CLIENT_STAMP_ID={{staff_client_id}} install"
-  args:
-    chdir: "{{evergreen_src_dir}}/Evergreen-ILS-{{ evergreen_version }}"
-    creates: "{{ evergreen_src_dir }}/Evergreen-ILS-{{ evergreen_version }}/Open-ILS/src/c-apps/.libs/liboils_cstore.so"
+- fail:
+    msg: "missing opensrf_branch or opensrf_version variable"
+  when: opensrf_branch is not defined and opensrf_version is not defined
 
 - name: ld path file
   template:

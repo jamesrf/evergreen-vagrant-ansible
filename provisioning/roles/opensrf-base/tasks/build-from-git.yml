@@ -5,14 +5,11 @@
   - automake
   - libtool
 
-- name: clone Evergreen
+- name: clone OpenSRF
   git:
     repo: "{{ opensrf_repo }}"
     version: "{{ opensrf_branch }}"
     dest: "{{ opensrf_src_dir }}"
-
-# Install Debian/Ubuntu Debs from included files
-- include_tasks: packages.yml
 
 ## TODO: move these dependencies into ansible?
 - name: install opensrf deps

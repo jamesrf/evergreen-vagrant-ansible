@@ -20,12 +20,6 @@
     path: "{{ opensrf_src_dir }}"
     state: directory
 
-- debug:
-    var: opensrf_branch
-
-- debug:
-    var: opensrf_version
-
 - include_tasks: build-from-tarball.yml
   when: opensrf_version is defined and opensrf_branch is not defined
 

@@ -7,7 +7,7 @@
 
 - name: create Evergreen DB
   command: >
-    perl {{ evergreen_src_dir }}/Evergreen-ILS-{{ evergreen_version }}/Open-ILS/src/support-scripts/eg_db_config --update-config \
+    perl {{ evergreen_src_dir }}/Open-ILS/src/support-scripts/eg_db_config --update-config \
        --service all --create-database --create-schema --create-offline \
        {{ "--load-all-sample" if evergreen_sample_data }} \
        --user {{evergreen_db_user}} --password {{evergreen_db_password}} --hostname {{evergreen_db_host}} --port {{evergreen_db_port}} \

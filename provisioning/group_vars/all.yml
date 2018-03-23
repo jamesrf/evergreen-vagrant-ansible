@@ -1,4 +1,9 @@
 ---
+prefix: "/openils"
+sysconfdir: "{{ prefix }}/conf"
+localstatedir: "{{ prefix }}/var"
+bindir: "{{ prefix }}/bin"
+
 evergreen_db: "evergreen"
 evergreen_db_user: "evergreen"
 evergreen_db_password: "eg1234"

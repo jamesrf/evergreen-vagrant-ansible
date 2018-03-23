@@ -1,0 +1,5 @@
+# curl -sL https://deb.nodesource.com/setup_8.x | sudo -E bash -
+# sudo apt-get install -y nodejs
+# cd $EVERGREEN_ROOT/Open-ILS/web/js/ui/default/staff/
+# npm run build-prod
+# npm run test

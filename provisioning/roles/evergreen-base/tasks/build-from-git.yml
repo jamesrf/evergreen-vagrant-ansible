@@ -1,0 +1,61 @@
+- name: install build tools
+  action: apt pkg={{item}} state=installed
+  with_items:
+  - autoconf
+  - automake
+  - libtool
+
+- name: clone Evergreen
+  git:
+    repo: "{{ evergreen_repo }}"
+    version: "{{ evergreen_branch }}"
+    dest: "{{ evergreen_src_dir }}"
+
+- name: install evergreen deps
+  shell: "make -f Open-ILS/src/extras/Makefile.install debian-stretch"
+  args:
+    chdir: "{{ evergreen_src_dir }}"
+
+- name: install nodejs
+  action: apt pkg={{item}} state=installed
+  with_items:
+  - nodejs
+
+- name: install webpack
+  command: npm install
+  chdir: "{{ evergreen_src_dir }}/Open-ILS/web/js/ui/default/staff/"    
+
+- name: install webpack
+  command: npm install -g webpack
+
+- name: build-prod
+  command: npm run build-prod
+  args:
+    chdir: "{{ evergreen_src_dir }}/Open-ILS/web/js/ui/default/staff/"    
+    #creates: /path/to/database
+
+# install webpack
+
+# Download OpenSRF tarball from $opensrf_url
+# Unzip into $opensrf_src_dir
+- name: autoreconf
+  shell: "autoreconf -i"
+  args:
+    chdir: "{{evergreen_src_dir}}"
+
+- name: build evergreen
+  shell: "PATH=$PATH:{{ bindir }} ./configure --prefix={{ prefix }} --sysconfdir={{ sysconfdir }} && make && make STAFF_CLIENT_STAMP_ID={{staff_client_id}} install"
+  args:
+    chdir: "{{evergreen_src_dir}}"
+    creates: "{{ evergreen_src_dir }}//Open-ILS/src/c-apps/.libs/liboils_cstore.so"
+
+
+- name: download and unzip dojo
+  unarchive:
+      src: "http://download.dojotoolkit.org/release-1.3.3/dojo-release-1.3.3.tar.gz"
+      dest: "/openils/var/web/js"
+      copy: no
+
+# wget http://download.dojotoolkit.org/release-1.3.3/dojo-release-1.3.3.tar.gz
+# tar -C /openils/var/web/js -xzf dojo-release-1.3.3.tar.gz
+# cp -r /openils/var/web/js/dojo-release-1.3.3/* /openils/var/web/js/dojo/.
