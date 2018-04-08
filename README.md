@@ -2,51 +2,69 @@
 
 ## What it is
 
-Automatically builds and installs Evergreen on a Vagrant VM with one command.
+Automatically builds and installs Evergreen on a fresh Debian VM with one command.
 
-Problems?  Open an Issue above by clicking on "Issues".
+Problems?  Open an Issue above by clicking on "Issues".  PRs welcome!
 
-PRs welcome!
+## System Requirements
+You must have a Mac or Linux machine.  
+For Windows 10 users, you can install on Windows Subsystem for Linux.
 
-## Requirements
+The Virtual Machine created requires 4GB of memory.  I would recommend you have a minimum of 8GB of memory on your machine, I have only tested with 16GB.
 
-- Vagrant: https://www.vagrantup.com/downloads.html
-- Virtualbox: https://www.virtualbox.org/
-- Ansible: http://docs.ansible.com/ansible/latest/intro_installation.html
+The build process downloads a lot of packages and takes some time.  You will need a good and reliable internet connection.
 
-Note: This probably won't work on Windows
+By default the VM is configured to listen on 10.10.11.11.  If this address doesn't work for your network environment, you can try changing it in the Vagrantfile
 
-## How to use
+## Software Dependencies
 
-1. Open your good old fashioned terminal
-2. Clone this repo: `git clone https://github.com/jamesrf/evergreen-vagrant-ansible`
-3. Enter the repo directory: `cd evergreen-vagrant-ansible`
+### Virtualbox
+Visit https://www.virtualbox.org/ for downloads/installation instructions
+
+### Ansible
+See http://docs.ansible.com/ansible/latest/intro_installation.html for instructions
+
+### Git
+```
+Ubuntu: sudo apt-get install git
+Older Centos/RHEL/Fedora: sudo yum install git
+Newer Centos/RHEL/Fedora: sudo dnf install git
+MacOS: Should have git preinstalled
+```
+
+## Installation
+1. Open your terminal
+2. Clone this repository:`git clone https://github.com/jamesrf/evergreen-vagrant-ansible`
+3. Enter the directory: `cd evergreen-vagrant-ansible`
 4. Run `vagrant up` 
   - it may take some time the first time you run it to download the base box
   - it takes about 20-30m on my machine to run the provisioning, times will vary depending on your machine's speed and internet connection
-  
-5. Your evergreen is now at https://10.10.11.11
-6. Default admin login is admin/pass123
+5. If there is no error, congrats, you have Evergreen!
+
+## Usage
+1. Your will now be able to access Evergreen at 
+
+| OPAC          | https://10.10.11.11 |
+| Staff         | https://10.10.11.11/eg/staff |
+
+2. When visiting these pages, your browser will give you scary warnings about a self-signed certificate, you must accept these warnings in order to continue.
+
+3. Default admin login is:
+
+| Username      | admin   |
+| Password      | pass123 |
 
 
-## Gotchas
+## Making changes
 
-If 10.10.11.11 address is in use in your environment, you can modify this in the Vagrantfile
+If you want to change how Evergreen is installed, check  `provisioning/group_vars/main.yml`.  
 
-By default the VM is configured to use 4GB of RAM.  You may want to adjust this in the Vagrantfile if you don't have that much memory.  In my testing, 2GB did not work well.
-
-You can adjust some settings by looking in `provisioning/group_vars/main.yml`.  I recommend you run `vagrant destroy` and then `vagrant up` as you may have trouble if you try to reprovision an existing machine.
+Due to some issues with XMPP user registration, I recommend you run `vagrant destroy` and then `vagrant up` from a clean VM.
 
 The ansible scripts in `/provisioning` can be repurposed for provisioning on bare metal.  See ansible documentation for details.
 
 ## Notes/TODO
-- Clean up!  This was just a spike project, it's a mess!
-- Build from a specified git branch rather than the tarball
-- Ability to install developer tools (Grunt,etc)
-- Explicitly state dependencies rather than running Makefile.install
-- Support other than Debian Jessie
-- Extra bits like reporter, etc.
-- better role isolation so you could run a playbook something like this:
+- Possible to create application-based roles?  ie: 
 ```
     - hosts: loadbalancer
       roles:
