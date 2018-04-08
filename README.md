@@ -31,6 +31,9 @@ Older Centos/RHEL/Fedora: sudo yum install git
 Newer Centos/RHEL/Fedora: sudo dnf install git
 MacOS: Should have git preinstalled
 ```
+|   |   |
+|---|---|
+|   |   |
 
 ## Installation
 1. Open your terminal
@@ -44,16 +47,19 @@ MacOS: Should have git preinstalled
 ## Usage
 1. Your will now be able to access Evergreen at 
 
-| OPAC          | https://10.10.11.11 |
+|               |                              |
+|---------------|------------------------------|
+| OPAC          | https://10.10.11.11          |
 | Staff         | https://10.10.11.11/eg/staff |
 
 2. When visiting these pages, your browser will give you scary warnings about a self-signed certificate, you must accept these warnings in order to continue.
 
 3. Default admin login is:
 
+|               |         |
+|---------------|---------|
 | Username      | admin   |
 | Password      | pass123 |
-
 
 ## Making changes
 
