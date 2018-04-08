@@ -3,10 +3,9 @@
     src: "hosts.j2"
     dest: "/etc/hosts"    
 
+# Things i find useful in my VM
 - name: install dev tools
   action: apt pkg={{item}} state=installed
   with_items:
   - vim
-  # - apache2-dev
-  # - libncurses5-dev
-# add other base tasks you want ie: monitoring, log setup
+  - ack
