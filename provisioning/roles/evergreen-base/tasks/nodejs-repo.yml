@@ -1,0 +1,18 @@
+- name: Install the gpg key for nodejs
+  apt_key:
+    url: "https://deb.nodesource.com/gpgkey/nodesource.gpg.key"
+    state: present
+
+- name: Install nodejs repos
+  apt_repository:
+    repo: "deb https://deb.nodesource.com/node_10.x stretch main"
+    state: present
+    update_cache: yes
+
+- name: Install nodejs
+  apt:
+    name: nodejs
+    state: present
+
+- name: update npm
+  command: npm i npm@latest -g

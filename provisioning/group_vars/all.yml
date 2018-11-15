@@ -13,4 +13,4 @@ evergreen_db_port: 5432
 evergreen_admin_user: "admin"
 evergreen_admin_password: "pass123"
 
-evergreen_sample_data: true
+evergreen_sample_data: false

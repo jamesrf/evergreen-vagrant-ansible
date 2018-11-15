@@ -5,11 +5,16 @@
   register: database_exists
   ignore_errors: yes
 
+- name: create dummy data?
+  set_fact:
+    load_sample: "--load-all-sample"
+  when: evergreen_sample_data
+
 - name: create Evergreen DB
   command: >
     perl {{ evergreen_src_dir }}/Open-ILS/src/support-scripts/eg_db_config --update-config \
        --service all --create-database --create-schema --create-offline \
-       {{ "--load-all-sample" if evergreen_sample_data }} \
+       {%- if evergreen_sample_data -%} --load-sample-data \ {% endif %}
        --user {{evergreen_db_user}} --password {{evergreen_db_password}} --hostname {{evergreen_db_host}} --port {{evergreen_db_port}} \
        --database {{evergreen_db}} --admin-user {{evergreen_admin_user}} --admin-pass {{evergreen_admin_password}}
   when: database_exists.rc != 0
