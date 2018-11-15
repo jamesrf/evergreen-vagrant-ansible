@@ -11,6 +11,7 @@
     repo: "{{ evergreen_repo }}"
     version: "{{ evergreen_branch }}"
     dest: "{{ evergreen_src_dir }}"
+    force: yes
 
 - name: evergreen repo ownership
   file:
