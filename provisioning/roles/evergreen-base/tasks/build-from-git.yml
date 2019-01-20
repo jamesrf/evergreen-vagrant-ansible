@@ -1,10 +1,11 @@
 - name: install build tools
-  action: apt pkg={{item}} state=installed
-  with_items:
-  - autoconf
-  - automake
-  - libtool
-  - apt-transport-https
+  apt:
+    name:
+    - autoconf
+    - automake
+    - libtool
+    - apt-transport-https
+    state: present
 
 - name: clone Evergreen
   git:
@@ -21,57 +22,24 @@
     mode: 0755
 
 - name: install evergreen deps
-  shell: "make -f Open-ILS/src/extras/Makefile.install debian-stretch"
+  shell: "make -f Open-ILS/src/extras/Makefile.install {{ansible_distribution|lower}}-{{ansible_distribution_release}}"
   args:
     chdir: "{{ evergreen_src_dir }}"
+  environment:
+    PERL_MM_USE_DEFAULT: 1
 
-- name: install evergreen deps
-  shell: "make -f Open-ILS/src/extras/Makefile.install debian-stretch-packager"
-  args:
-    chdir: "{{ evergreen_src_dir }}"
+# - name: install evergreen packager deps
+#   shell: "make -f Open-ILS/src/extras/Makefile.install {{ansible_distribution|lower}}-{{ansible_distribution_release}}-packager"
+#   args:
+#     chdir: "{{ evergreen_src_dir }}"
 
 - include_tasks: nodejs-repo.yml
 
-- name: evergreen js repo ownership
-  file:
-    path: "{{ evergreen_src_dir }}/Open-ILS/web/js/ui/default/staff/"
-    owner: opensrf
-    group: opensrf
-    mode: 0755
 
-- name: npm install
-  command: npm install
-  args:
-    chdir: "{{ evergreen_src_dir }}/Open-ILS/web/js/ui/default/staff/"
-  become: true
-  become_user: opensrf
+- include_tasks: build-egclient-js.yml
 
-- name: npm build-prod
-  command: npm run build-prod
-  args:
-    chdir: "{{ evergreen_src_dir }}/Open-ILS/web/js/ui/default/staff/"
+- include_tasks: build-eg2-js.yml
 
-
-
-
-- name: evergreen js repo ownership
-  file:
-    path: "{{ evergreen_src_dir }}/Open-ILS/src/eg2/"
-    owner: opensrf
-    group: opensrf
-    mode: 0755
-
-- name: npm install
-  command: npm install
-  args:
-    chdir: "{{ evergreen_src_dir }}/Open-ILS/src/eg2/"
-  become: true
-  become_user: opensrf
-
-- name: ng build
-  command: ng build
-  args:
-    chdir: "{{ evergreen_src_dir }}/Open-ILS/src/eg2/"
 
 - name: autoreconf
   shell: "autoreconf -i"

@@ -1,0 +1,18 @@
+- name: evergreen js repo ownership
+  file:
+    path: "{{ evergreen_src_dir }}/Open-ILS/web/js/ui/default/staff/"
+    owner: opensrf
+    group: opensrf
+    mode: 0755
+
+- name: npm install
+  command: npm install
+  args:
+    chdir: "{{ evergreen_src_dir }}/Open-ILS/web/js/ui/default/staff/"
+  become: true
+  become_user: opensrf
+
+- name: npm build-prod
+  command: npm run build-prod
+  args:
+    chdir: "{{ evergreen_src_dir }}/Open-ILS/web/js/ui/default/staff/"

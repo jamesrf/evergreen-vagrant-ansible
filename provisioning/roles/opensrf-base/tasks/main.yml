@@ -6,13 +6,15 @@
     cache_valid_time=3600
 
 - name: install packages
-  action: apt pkg={{item}} state=installed
-  with_items:
-  - build-essential
-  - git
-  - sudo
-  - wget
-  - curl
+  apt:
+    name:
+      - build-essential
+      - git
+      - sudo
+      - wget
+      - curl
+    state: present
+    autoclean: yes
 
 # Create a directory for our OpenSRF src code
 - name: Creates directory

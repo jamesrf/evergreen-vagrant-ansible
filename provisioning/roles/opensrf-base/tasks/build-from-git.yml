@@ -1,9 +1,10 @@
 - name: install build tools
-  action: apt pkg={{item}} state=installed
-  with_items:
-  - autoconf
-  - automake
-  - libtool
+  apt:
+    name:
+    - autoconf
+    - automake
+    - libtool
+    state: present
 
 - name: clone OpenSRF
   git:
@@ -11,9 +12,10 @@
     version: "{{ opensrf_branch }}"
     dest: "{{ opensrf_src_dir }}"
 
+
 ## TODO: move these dependencies into ansible?
 - name: install opensrf deps
-  shell: "make -f src/extras/Makefile.install debian-stretch"
+  shell: "make -f src/extras/Makefile.install {{ansible_distribution|lower}}-{{ansible_distribution_release}}"
   args:
     chdir: "{{ opensrf_src_dir }}"
 

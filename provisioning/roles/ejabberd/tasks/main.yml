@@ -1,9 +1,10 @@
 ---
 - name: install packages
-  action: apt pkg={{item}} state=installed
-  with_items:
-  - ejabberd
-  - ejabberd-contrib
+  apt:
+    name:
+    - ejabberd
+    - ejabberd-contrib
+    state: present
 
 - name: ejabberd.yml
   template:

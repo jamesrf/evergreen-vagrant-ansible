@@ -5,7 +5,23 @@
 
 # Things i find useful in my VM
 - name: install dev tools
-  action: apt pkg={{item}} state=installed
-  with_items:
-  - vim
-  - ack
+  apt:
+    name:
+    - vim
+    - python3-apt
+    - python3-psycopg2
+    state: present
+    autoclean: yes
+
+# - name: Initialize CPAN
+#   become: true
+#   export PERL_MM_USE_DEFAULT=1
+
+
+- name: Update and upgrade apt packages
+  become: true
+  apt:
+    upgrade: yes
+    update_cache: yes
+    cache_valid_time: 86400 #One day
+    autoclean: yes

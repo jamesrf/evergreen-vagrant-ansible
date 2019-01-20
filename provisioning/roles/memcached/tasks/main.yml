@@ -1,6 +1,7 @@
 ---
 - name: install packages
-  action: apt pkg={{item}} state=installed
-  with_items:
-  - memcached
+  apt:
+    name:
+    - memcached
+    state: present
 

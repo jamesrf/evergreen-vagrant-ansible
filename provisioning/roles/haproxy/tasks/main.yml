@@ -1,8 +1,8 @@
 ---
 - name: install packages
-  action: apt pkg={{item}} state=installed
-  with_items:
-  - haproxy
+  apt:
+    name: "haproxy"
+    state: present
 
 - name: create pemfile
   command: bash -c "cat /etc/apache2/ssl/server.crt /etc/apache2/ssl/server.key > /etc/apache2/ssl/cert_plus_key.pem"

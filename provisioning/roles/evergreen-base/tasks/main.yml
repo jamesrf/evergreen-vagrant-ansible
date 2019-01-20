@@ -56,9 +56,10 @@
     group: opensrf
     mode: 0755
 
+# FIXME - this should be on a different role
 - include_tasks: database.yml
 
-# FIXME - Debian 
+# FIXME - Check on Debian 
 - name: evergreen service
   template:
     src: evergreen.service.j2
@@ -66,7 +67,6 @@
   notify: 
   - "reload systemd"
   - "restart evergreen"
-
 
 - name: start evergreen
   service:  name=evergreen state=started
