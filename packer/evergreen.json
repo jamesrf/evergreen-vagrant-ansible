@@ -1,0 +1,35 @@
+{
+    "builders": [
+        {
+            "type": "virtualbox-ovf",
+            "name": "evergreen",
+            "source_path": "output-base/evergreen-base.ova",
+            "output_directory": "output-evergreen",
+            "headless": true,
+            "format":"ova",
+            "ssh_username": "evergreen",
+            "ssh_password": "evergreen",
+            "shutdown_command": "echo 'evergreen' | sudo -S shutdown -P now"
+          }
+    ],
+  
+    "provisioners": [
+      {
+        "type":"ansible-local",
+        "playbook_file": "../provisioning/playbook.yml",
+        "playbook_dir": "../provisioning",
+        "extra_arguments": [
+          "-e ansible_python_interpreter=/usr/bin/python3",
+          "--become"
+        ]
+      },
+      {
+        "type":"shell",
+        "execute_command": "echo 'evergreen' | sudo -S env {{ .Vars }} {{ .Path }}",
+        "scripts": [
+            "scripts/cleanup.sh"
+        ]
+      }
+    ]
+  }
+  

@@ -2,7 +2,7 @@
 # vi: set ft=ruby :
 
 Vagrant.configure("2") do |config|
-  config.vm.box = "debian/stretch64"
+  config.vm.box = "ubuntu/bionic64"
 
   # adjust this if 10.10.11.11 is in use on your network
   config.vm.network "private_network", ip: "10.10.11.11"
@@ -28,7 +28,9 @@ Vagrant.configure("2") do |config|
     ansible.verbose = "vv"
     ansible.extra_vars = {
       ansible_python_interpreter: "/usr/bin/python3",
+      ansible_ssh_user: "vagrant"
      }
+
   end
 
   # if ENV['EVERGREEN_ENV'] != 'dev'

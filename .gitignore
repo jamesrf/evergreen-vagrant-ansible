@@ -1,2 +1,5 @@
 .vagrant
 provisioning/playbook.retry
+packer/output-base
+packer/output-evergreen
+src

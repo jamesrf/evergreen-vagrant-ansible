@@ -1,0 +1,45 @@
+{
+  "builders": [
+   {
+      "boot_command" : [
+            "<esc><esc><enter><wait>",
+            "/install/vmlinuz noapic ",
+            "preseed/url=http://{{ .HTTPIP }}:{{ .HTTPPort }}/preseed.cfg ",
+            "debian-installer=en_US auto locale=en_US kbd-chooser/method=us ",
+            "hostname=evergreen ",
+            "fb=false debconf/frontend=noninteractive ",
+            "keyboard-configuration/modelcode=SKIP keyboard-configuration/layout=USA ",
+            "keyboard-configuration/variant=USA console-setup/ask_detect=false ",
+            "initrd=/install/initrd.gz -- <enter>"
+      ],
+      "guest_os_type": "Ubuntu_64",
+      "vm_name": "evergreen-base",
+      "name": "evergreen-base",
+      "type": "virtualbox-iso",
+      "iso_url": "http://cdimage.ubuntu.com/ubuntu/releases/18.04.1/release/ubuntu-18.04.1-server-amd64.iso",
+      "iso_checksum": "e8264fa4c417216f4304079bd94f895e",
+      "iso_checksum_type": "md5",
+      "ssh_username": "evergreen",
+      "ssh_password": "evergreen",
+      "ssh_wait_timeout": "10000s",
+      "headless": false,
+      "http_directory": "http",
+      "shutdown_command": "echo 'evergreen' | sudo -S shutdown -P now",
+      "output_directory": "output-base",
+      "format": "ova",
+      "vboxmanage": [
+        ["modifyvm","{{.Name}}","--memory","4096"],
+        ["modifyvm","{{.Name}}","--cpus","4"]      ]
+    }
+  ],
+
+  "provisioners": [
+    {
+      "type":"shell",
+      "execute_command": "echo 'evergreen' | sudo -S env {{ .Vars }} {{ .Path }}",
+      "scripts": [
+          "scripts/ansible.sh"
+      ]
+    }
+  ]
+}

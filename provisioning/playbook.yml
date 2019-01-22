@@ -1,6 +1,5 @@
 ---
 - hosts: all
-  user: vagrant
   become: yes
   gather_facts: yes
   roles:

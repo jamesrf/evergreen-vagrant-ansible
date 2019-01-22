@@ -1,4 +1,14 @@
 ---
+- name: Add an Apt signing key, will not download if present
+  apt_key:
+    id: ACCC4CF8
+    url: https://www.postgresql.org/media/keys/ACCC4CF8.asc
+    state: present
+
+- apt_repository:
+    repo: deb http://apt.postgresql.org/pub/repos/apt/ bionic-pgdg main
+    state: present
+
 - name: install packages
   apt:
     state: "present"
@@ -8,7 +18,6 @@
     - libjson-xs-perl 
     - liblibrary-callnumber-lc-perl 
     - libmarc-record-perl
-    - libmarc-xml-perl 
     - librose-uri-perl 
     - libuuid-tiny-perl 
     - libxml-libxml-perl 
@@ -20,6 +29,11 @@
     - libpq-dev 
     - python-psycopg2 
     - acl
+
+- name: "Install MARCXML Perl Mod"
+  shell: "perl -MCPAN -e 'install MARC::File::XML'"
+  environment:
+    PERL_MM_USE_DEFAULT: 1
 
 - name: "create EG postgres user"
   become: yes
