@@ -61,6 +61,14 @@ MacOS: Should have git preinstalled
 | Username      | admin   |
 | Password      | pass123 |
 
+## Packer
+
+Packer support is untested.  To build an OVF with packer:
+```
+cd packer
+packer build base.json
+packer build evergreen.json
+```
 ## Making changes
 
 If you want to change how Evergreen is installed, check  `provisioning/group_vars/main.yml`.  
